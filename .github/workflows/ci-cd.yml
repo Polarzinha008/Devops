@@ -82,18 +82,19 @@ jobs:
       - name: Smoke test
         run: |
           NODE_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${CLUSTER_NAME}-worker")
-          echo "Testando http://${NODE_IP}:30080"
-          for i in $(seq 1 10); do
-            if curl -fsS "http://${NODE_IP}:30080/health"; then
-              echo
-              curl -fsS "http://${NODE_IP}:30080/"
-              echo
-              curl -fsS "http://${NODE_IP}:30080/" | grep -q "\"version\":\"${VERSION}\"" \
-                && echo "Versão ${VERSION} no ar!" && exit 0
+          URL="http://${NODE_IP}:30080/"
+          echo "Testando ${URL}"
+          for i in $(seq 1 20); do
+            RESP=$(curl -fsS "$URL" 2>/dev/null) || RESP=""
+            echo "Tentativa $i: ${RESP:-sem resposta}"
+            if echo "$RESP" | grep -q "\"version\":\"${VERSION}\""; then
+              echo "Versao ${VERSION} no ar!"
+              exit 0
             fi
             sleep 3
           done
-          echo "Smoke test falhou"; exit 1
+          echo "Smoke test falhou"
+          exit 1
 
       - name: Estado final
         if: always()

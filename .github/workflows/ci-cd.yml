@@ -1,0 +1,100 @@
+name: CI/CD - Build Docker e Deploy no Kind
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "app/**"
+      - "k8s/**"
+      - ".github/workflows/**"
+  workflow_dispatch: # permite rodar manualmente pela aba Actions
+
+env:
+  CLUSTER_NAME: devops        # mesmo nome do terraform.tfvars
+  IMAGE_NAME: devops-app
+  NAMESPACE: devops-app
+
+jobs:
+  build:
+    name: Build da imagem Docker
+    runs-on: [self-hosted, linux]
+    outputs:
+      image: ${{ steps.tag.outputs.image }}
+      version: ${{ steps.tag.outputs.version }}
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Definir tag da imagem
+        id: tag
+        run: |
+          VERSION="${GITHUB_SHA::7}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "image=${IMAGE_NAME}:${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Docker build (multi-stage, testes rodam no estágio builder)
+        run: |
+          docker build \
+            -t "${{ steps.tag.outputs.image }}" \
+            -t "${IMAGE_NAME}:latest" \
+            ./app
+
+      - name: Listar imagem gerada
+        run: docker image ls "${IMAGE_NAME}"
+
+  deploy:
+    name: Deploy no Kind
+    needs: build
+    runs-on: [self-hosted, linux]
+    env:
+      IMAGE: ${{ needs.build.outputs.image }}
+      VERSION: ${{ needs.build.outputs.version }}
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Verificar se o cluster existe
+        run: |
+          kind get clusters
+          kind get clusters | grep -qx "${CLUSTER_NAME}" \
+            || { echo "Cluster ${CLUSTER_NAME} não encontrado. Rode 'terraform apply' antes."; exit 1; }
+
+      - name: Configurar kubectl para o cluster
+        run: |
+          kind export kubeconfig --name "${CLUSTER_NAME}"
+          kubectl cluster-info
+          kubectl get nodes -o wide
+
+      - name: Carregar imagem nos nodes do Kind
+        run: kind load docker-image "${IMAGE}" --name "${CLUSTER_NAME}"
+
+      - name: Aplicar manifests
+        run: |
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/service.yaml
+          sed -e "s|IMAGE_PLACEHOLDER|${IMAGE}|" \
+              -e "s|APP_VERSION_PLACEHOLDER|\"${VERSION}\"|" \
+              k8s/deployment.yaml | kubectl apply -f -
+
+      - name: Aguardar rollout
+        run: kubectl -n "${NAMESPACE}" rollout status deployment/devops-app --timeout=180s
+
+      - name: Smoke test
+        run: |
+          NODE_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${CLUSTER_NAME}-worker")
+          echo "Testando http://${NODE_IP}:30080"
+          for i in $(seq 1 10); do
+            if curl -fsS "http://${NODE_IP}:30080/health"; then
+              echo
+              curl -fsS "http://${NODE_IP}:30080/"
+              echo
+              curl -fsS "http://${NODE_IP}:30080/" | grep -q "\"version\":\"${VERSION}\"" \
+                && echo "Versão ${VERSION} no ar!" && exit 0
+            fi
+            sleep 3
+          done
+          echo "Smoke test falhou"; exit 1
+
+      - name: Estado final
+        if: always()
+        run: kubectl -n "${NAMESPACE}" get deploy,rs,pods,svc -o wide

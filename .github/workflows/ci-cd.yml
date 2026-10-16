@@ -15,8 +15,33 @@ env:
   NAMESPACE: devops-app
 
 jobs:
+  sonar:
+    name: Análise SonarQube
+    runs-on: [self-hosted, linux]
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Testes com cobertura
+        run: |
+          docker run --rm --user "$(id -u):$(id -g)" \
+            -e GOCACHE=/tmp/gocache -e GOPATH=/tmp/gopath \
+            -v "$PWD/app:/src" -w /src golang:1.23-alpine \
+            go test -coverprofile=coverage.out ./...
+
+      - name: SonarQube Scan + Quality Gate
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: -Dsonar.qualitygate.wait=true
+
   build:
     name: Build da imagem Docker
+    needs: sonar
     runs-on: [self-hosted, linux]
     outputs:
       image: ${{ steps.tag.outputs.image }}

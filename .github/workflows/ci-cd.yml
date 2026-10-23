@@ -35,7 +35,6 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           args: -Dsonar.qualitygate.wait=true
 
@@ -66,6 +65,21 @@ jobs:
 
       - name: Listar imagem gerada
         run: docker image ls "${IMAGE_NAME}"
+
+      - name: Login no Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Push da imagem para o Docker Hub
+        run: |
+          REPO="${{ secrets.DOCKER_USERNAME }}/${IMAGE_NAME}"
+          docker tag "${{ steps.tag.outputs.image }}" "${REPO}:${{ steps.tag.outputs.version }}"
+          docker tag "${{ steps.tag.outputs.image }}" "${REPO}:latest"
+          docker push "${REPO}:${{ steps.tag.outputs.version }}"
+          docker push "${REPO}:latest"
+
+      - name: Logout do Docker Hub
+        if: always()
+        run: docker logout
 
   deploy:
     name: Deploy no Kind

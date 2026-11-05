@@ -1,0 +1,123 @@
+// Dados dos destinos turísticos exibidos no site.
+export const DESTINOS = [
+  {
+    id: "rio-de-janeiro",
+    nome: "Rio de Janeiro",
+    estado: "RJ",
+    regiao: "Sudeste",
+    tipo: "Praia",
+    descricao:
+      "Cristo Redentor, Pão de Açúcar e as praias de Copacabana e Ipanema fazem do Rio o cartão-postal do Brasil.",
+    destaques: ["Cristo Redentor", "Pão de Açúcar", "Praia de Ipanema"],
+    melhorEpoca: "Abril a outubro",
+    cores: ["#0ea5e9", "#22c55e"],
+  },
+  {
+    id: "foz-do-iguacu",
+    nome: "Foz do Iguaçu",
+    estado: "PR",
+    regiao: "Sul",
+    tipo: "Natureza",
+    descricao:
+      "As Cataratas do Iguaçu reúnem cerca de 275 quedas d'água na fronteira com a Argentina.",
+    destaques: ["Cataratas do Iguaçu", "Parque das Aves", "Usina de Itaipu"],
+    melhorEpoca: "Março a maio",
+    cores: ["#10b981", "#0369a1"],
+  },
+  {
+    id: "salvador",
+    nome: "Salvador",
+    estado: "BA",
+    regiao: "Nordeste",
+    tipo: "Cultura",
+    descricao:
+      "Primeira capital do Brasil, com o Pelourinho colonial, a culinária baiana e muita música.",
+    destaques: ["Pelourinho", "Elevador Lacerda", "Farol da Barra"],
+    melhorEpoca: "Setembro a março",
+    cores: ["#f59e0b", "#dc2626"],
+  },
+  {
+    id: "fernando-de-noronha",
+    nome: "Fernando de Noronha",
+    estado: "PE",
+    regiao: "Nordeste",
+    tipo: "Praia",
+    descricao:
+      "Arquipélago com águas cristalinas, golfinhos e algumas das praias mais bonitas do mundo.",
+    destaques: ["Baía do Sancho", "Baía dos Porcos", "Mergulho"],
+    melhorEpoca: "Agosto a dezembro",
+    cores: ["#06b6d4", "#1e3a8a"],
+  },
+  {
+    id: "bonito",
+    nome: "Bonito",
+    estado: "MS",
+    regiao: "Centro-Oeste",
+    tipo: "Natureza",
+    descricao:
+      "Rios de águas transparentes, grutas e flutuação entre peixes no coração do Mato Grosso do Sul.",
+    destaques: ["Gruta do Lago Azul", "Rio da Prata", "Abismo Anhumas"],
+    melhorEpoca: "Dezembro a março",
+    cores: ["#14b8a6", "#4d7c0f"],
+  },
+  {
+    id: "manaus",
+    nome: "Manaus",
+    estado: "AM",
+    regiao: "Norte",
+    tipo: "Natureza",
+    descricao:
+      "Porta de entrada da Amazônia, com o Encontro das Águas e o histórico Teatro Amazonas.",
+    destaques: ["Encontro das Águas", "Teatro Amazonas", "Selva amazônica"],
+    melhorEpoca: "Junho a novembro",
+    cores: ["#16a34a", "#854d0e"],
+  },
+  {
+    id: "gramado",
+    nome: "Gramado",
+    estado: "RS",
+    regiao: "Sul",
+    tipo: "Serra",
+    descricao:
+      "Cidade serrana de clima europeu, famosa pelo chocolate, pelo Natal Luz e pelo festival de cinema.",
+    destaques: ["Lago Negro", "Natal Luz", "Rua Coberta"],
+    melhorEpoca: "Junho a agosto",
+    cores: ["#7c3aed", "#be185d"],
+  },
+  {
+    id: "ouro-preto",
+    nome: "Ouro Preto",
+    estado: "MG",
+    regiao: "Sudeste",
+    tipo: "Cultura",
+    descricao:
+      "Patrimônio Mundial da UNESCO, com igrejas barrocas, ladeiras de pedra e a história do ciclo do ouro.",
+    destaques: ["Igreja São Francisco de Assis", "Mina da Passagem", "Praça Tiradentes"],
+    melhorEpoca: "Abril a setembro",
+    cores: ["#ca8a04", "#78350f"],
+  },
+  {
+    id: "lencois-maranhenses",
+    nome: "Lençóis Maranhenses",
+    estado: "MA",
+    regiao: "Nordeste",
+    tipo: "Natureza",
+    descricao:
+      "Dunas de areia branca intercaladas com lagoas de água doce que se formam na época das chuvas.",
+    destaques: ["Lagoa Azul", "Lagoa Bonita", "Atins"],
+    melhorEpoca: "Junho a setembro",
+    cores: ["#38bdf8", "#eab308"],
+  },
+  {
+    id: "chapada-dos-veadeiros",
+    nome: "Chapada dos Veadeiros",
+    estado: "GO",
+    regiao: "Centro-Oeste",
+    tipo: "Natureza",
+    descricao:
+      "Cachoeiras, cânions e trilhas no cerrado, a cerca de 230 km de Brasília.",
+    destaques: ["Vale da Lua", "Cachoeira Santa Bárbara", "Saltos do Rio Preto"],
+    melhorEpoca: "Maio a setembro",
+    cores: ["#ea580c", "#15803d"],
+  },
+];

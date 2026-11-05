@@ -1,5 +1,5 @@
-.terraform/
-*.tfstate
-*.tfstate.*
-.terraform.lock.hcl
-*-config
+node_modules/
+coverage/
+.scannerwork/
+*.sarif
+trivy-*.json

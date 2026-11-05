@@ -1,0 +1,5 @@
+# Falsos positivos aceitos conscientemente (revisar a cada semestre)
+
+# KSV-0125: "imagem de registry não confiável".
+# O trabalho exige publicar a imagem no Docker Hub, então esse registry é intencional.
+KSV-0125

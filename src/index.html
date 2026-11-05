@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Guia de destinos turísticos do Brasil: praias, natureza, serra e cidades históricas." />
+    <meta name="theme-color" content="#064e3b" />
+    <title>Destinos do Brasil | Guia de Turismo</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header id="topo" class="topo">
+      <a class="logo" href="#inicio" aria-label="Destinos do Brasil, início">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 30 16 16 30 2 16Z" fill="#facc15"/><circle cx="16" cy="16" r="6.5" fill="#1d4ed8"/></svg>
+        Destinos do Brasil
+      </a>
+      <nav aria-label="Principal">
+        <ul>
+          <li><a href="#destinos">Destinos</a></li>
+          <li><a href="#dicas">Dicas</a></li>
+          <li><a href="#sobre">Sobre</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section id="inicio" class="hero">
+      <img
+        class="hero-foto"
+        src="https://commons.wikimedia.org/wiki/Special:FilePath/Rio%20de%20Janeiro%2C%20Brazil%20-08.jpg?width=1920"
+        alt="Bondinho do Pão de Açúcar sobre a baía de Guanabara, no Rio de Janeiro"
+        fetchpriority="high"
+      />
+      <div class="hero-conteudo">
+        <p class="sobretitulo">Guia de viagem</p>
+        <h1>Descubra o Brasil</h1>
+        <p class="hero-sub">Praias de água cristalina, cataratas, dunas, serras e cidades históricas. Encontre o seu próximo destino.</p>
+        <form class="hero-busca" role="search" id="form-busca">
+          <label for="busca" class="sr-only">Buscar destino</label>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input id="busca" type="search" placeholder="Busque por praia, cachoeira, Bahia..." autocomplete="off" />
+          <button type="submit" class="botao">Buscar</button>
+        </form>
+      </div>
+      <a id="credito-hero" class="credito credito-hero" target="_blank" rel="noopener noreferrer"></a>
+    </section>
+
+    <section class="numeros" aria-label="O guia em números">
+      <div><strong id="num-destinos">10</strong><span>destinos</span></div>
+      <div><strong>5</strong><span>regiões</span></div>
+      <div><strong>7</strong><span>Patrimônios Mundiais (UNESCO)</span></div>
+      <div><strong id="num-tipos">4</strong><span>estilos de viagem</span></div>
+    </section>
+
+    <main>
+      <section id="destinos" class="secao">
+        <div class="secao-cabecalho">
+          <div>
+            <p class="sobretitulo">Explore</p>
+            <h2>Destinos em destaque</h2>
+          </div>
+          <label class="filtro-tipo">
+            Tipo de viagem
+            <select id="tipo"><option value="todos">Todos</option></select>
+          </label>
+        </div>
+
+        <div id="chips-regiao" class="chips" role="group" aria-label="Filtrar por região"></div>
+        <p id="contador" class="contador" aria-live="polite"></p>
+        <div id="lista-destinos" class="grade"></div>
+        <div id="vazio" class="vazio" hidden>
+          <p><strong>Nenhum destino encontrado.</strong> Tente outra palavra ou limpe os filtros.</p>
+          <button type="button" id="limpar" class="botao botao-contorno">Limpar filtros</button>
+        </div>
+      </section>
+
+      <section id="dicas" class="secao-faixa">
+        <div class="secao">
+          <p class="sobretitulo">Antes de ir</p>
+          <h2>Dicas de viagem</h2>
+          <div class="dicas">
+            <article class="dica">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <h3>Planeje a época</h3>
+              <p>Cada região tem seu período de chuva e de seca. Confira a melhor época antes de comprar as passagens.</p>
+            </article>
+            <article class="dica">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v13H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 7V4h6v3M9 13l2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <h3>Reserve os passeios</h3>
+              <p>Bonito, Fernando de Noronha e os parques nacionais limitam visitantes por dia. Reserve com antecedência.</p>
+            </article>
+            <article class="dica">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21c-5-3-8-7-8-11a8 8 0 0 1 16 0c0 4-3 8-8 11Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 14V8m-3 3 3-3 3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <h3>Turismo responsável</h3>
+              <p>Siga as trilhas, leve o seu lixo de volta e valorize o comércio e os guias locais.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="sobre" class="secao sobre">
+        <div>
+          <p class="sobretitulo">Sobre o projeto</p>
+          <h2>Do commit ao cluster</h2>
+          <p>
+            Site desenvolvido para o trabalho de DevOps. Cada alteração passa por uma pipeline DevSecOps no
+            GitHub Actions: análise de qualidade no SonarQube, scans de segurança com o Trivy, publicação da
+            imagem no Docker Hub e deploy em um cluster Kubernetes (kind).
+          </p>
+        </div>
+        <ol class="pipeline" aria-label="Etapas da pipeline">
+          <li><span>1</span>Build</li>
+          <li><span>2</span>SonarQube</li>
+          <li><span>3</span>Trivy</li>
+          <li><span>4</span>Docker Hub</li>
+          <li><span>5</span>kind</li>
+        </ol>
+      </section>
+    </main>
+
+    <dialog id="detalhes" aria-labelledby="detalhes-titulo">
+      <figure class="detalhes-foto">
+        <img alt="" />
+        <figcaption><a class="credito" target="_blank" rel="noopener noreferrer"></a></figcaption>
+      </figure>
+      <div class="detalhes-corpo">
+        <p class="detalhes-meta"></p>
+        <h3 id="detalhes-titulo"></h3>
+        <p class="descricao"></p>
+        <h4>Não deixe de conhecer</h4>
+        <ul class="tags"></ul>
+        <p class="epoca-linha"><strong>Melhor época:</strong> <span class="epoca"></span></p>
+      </div>
+      <button type="button" class="fechar" aria-label="Fechar">×</button>
+    </dialog>
+
+    <footer class="rodape">
+      <div class="rodape-topo">
+        <p class="logo">Destinos do Brasil</p>
+        <p>Trabalho de DevOps · &copy; <span id="ano"></span></p>
+      </div>
+      <details class="creditos">
+        <summary>Créditos das fotos (Wikimedia Commons)</summary>
+        <ul id="lista-creditos"></ul>
+      </details>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

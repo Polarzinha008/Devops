@@ -140,8 +140,6 @@ jobs:
     name: build (Docker + Trivy image + push)
     runs-on: ubuntu-latest
     needs: [quality, security-iac, security-code]
-    outputs:
-      image: ${{ steps.meta.outputs.image }}
     steps:
       - uses: actions/checkout@v7
 
@@ -221,16 +219,38 @@ jobs:
           cluster_name: turismo
           config: kind-config.yaml
 
+      # O nome da imagem é montado aqui (e não lido do job build) porque o GitHub
+      # descarta saídas de job que contêm secrets, como o usuário do Docker Hub.
       - name: Aplicar manifestos com a imagem do Docker Hub
         env:
-          IMAGE: ${{ needs.build.outputs.image }}
+          DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME || secrets.DOCKER_USERNAME }}
+          DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN || secrets.DOCKER_PASSWORD }}
         run: |
+          IMAGE="docker.io/${DOCKER_USER,,}/${IMAGE_NAME}:${GITHUB_SHA::7}"
+          echo "Imagem: ${IMAGE}"
           kubectl apply -f k8s/namespace.yaml
-          sed -E "s#image: .*destinos-do-brasil:.*#image: docker.io/${IMAGE}#" k8s/deployment.yaml | kubectl apply -f -
+          # Credencial do Docker Hub no cluster: funciona mesmo se o repositório
+          # da imagem for privado e evita o limite de downloads anônimos
+          kubectl -n turismo create secret docker-registry dockerhub \
+            --docker-server=https://index.docker.io/v1/ \
+            --docker-username="${DOCKER_USER}" --docker-password="${DOCKER_PASS}" \
+            --dry-run=client -o yaml | kubectl apply -f -
+          sed -E "s#image: .*destinos-do-brasil:.*#image: ${IMAGE}#" k8s/deployment.yaml | kubectl apply -f -
           kubectl apply -f k8s/service.yaml
 
       - name: Aguardar o rollout
         run: kubectl -n turismo rollout status deployment/destinos-frontend --timeout=180s
+
+      - name: Diagnóstico (só se o deploy falhar)
+        if: failure()
+        run: |
+          kubectl -n turismo get deploy,rs,pods,svc -o wide || true
+          echo "================ describe pods ================"
+          kubectl -n turismo describe pods -l app=destinos-frontend || true
+          echo "================ eventos ================"
+          kubectl -n turismo get events --sort-by=.lastTimestamp || true
+          echo "================ logs ================"
+          kubectl -n turismo logs -l app=destinos-frontend --all-containers --tail=50 || true
 
       - name: Verificar o frontend no ar
         run: |

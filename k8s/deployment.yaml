@@ -16,6 +16,9 @@ spec:
         app: destinos-frontend
     spec:
       automountServiceAccountToken: false
+      # Secret criado pela pipeline com o login do Docker Hub
+      imagePullSecrets:
+        - name: dockerhub
       securityContext:
         runAsNonRoot: true
         runAsUser: 10101
